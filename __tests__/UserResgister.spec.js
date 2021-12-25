@@ -46,7 +46,6 @@ describe('User Registation', () => {
     await postValidUser();
     const users = await User.findAll();
     const savedUser = users[0];
-    console.log(savedUser);
     expect(savedUser.password).not.toBe('P4ssword');
   });
 });
