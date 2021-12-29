@@ -1,0 +1,11 @@
+{
+  "username_null": "กรอกข้อมูล username",
+  "username_size": "อักขระความยาว 4 ถึง 32 ตัว",
+  "email_null": "กรอกข้อมูล email",
+  "email_invalid": "E-mail ไม่ถูกต้อง",
+  "password_null": "กรอกข้อมูล password",
+  "password_size": "อักขระความยาวอย่างน้อย 6 ตัว",
+  "password_pattern": "อักขระควรประกอบด้วย 1 ตัวพิมพ์เล็ก, 1 ตัวพิมพ์ใหญ่ และ 1 ตัวเลข",
+  "email_inuse": "Email ถูกใช้งานแล้ว",
+  "user_create_success": "สร้างข้อมูลผู้ใช้งานสำเร็จ"
+}
