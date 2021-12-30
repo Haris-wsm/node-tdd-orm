@@ -8,6 +8,12 @@
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "test": "cross-env NODE_ENV=test jest --watch"
   },
+  "jest": {
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
   "author": "Haris Waesamah",
   "license": "ISC",
   "dependencies": {
@@ -25,8 +31,9 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "jest": "^27.4.5",
-    "nodemailer-stub": "^1.2.2",
+    "jest-watch-typeahead": "^1.0.0",
     "nodemon": "^2.0.15",
+    "smtp-server": "^3.9.0",
     "supertest": "^6.1.6"
   }
 }

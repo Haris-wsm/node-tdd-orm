@@ -3,14 +3,46 @@ const app = require('../src/app');
 
 const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
-const nodmailerStub = require('nodemailer-stub');
+// const nodmailerStub = require('nodemailer-stub');
+const SMTPSERVER = require('smtp-server').SMTPServer;
 
-beforeAll(() => {
+let lastMail, server;
+let simulateSmtpFailure = false;
+
+beforeAll(async () => {
+  server = new SMTPSERVER({
+    authOptional: true,
+    onData(stream, session, callback) {
+      let mailBody;
+
+      stream.on('data', (data) => {
+        mailBody += data.toString();
+      });
+
+      stream.on('end', () => {
+        if (simulateSmtpFailure) {
+          const err = new Error('Invalid mailbox');
+          err.responseCode = 553;
+          return callback(err);
+        }
+        lastMail = mailBody;
+        callback();
+      });
+    }
+  });
+
+  await server.listen(8587, 'localhost');
+
   return sequelize.sync();
 });
 
 beforeEach(() => {
+  simulateSmtpFailure = false;
   return User.destroy({ truncate: true });
+});
+
+afterAll(async () => {
+  await server.close();
 });
 
 const validUser = {
@@ -89,21 +121,21 @@ describe('User Registation', () => {
   const email_inuse = 'Email in use';
 
   it.each`
-    field         | value               | expectedMessage
-    ${'username'} | ${null}             | ${username_null}
-    ${'username'} | ${'usr'}            | ${username_size}
-    ${'username'} | ${'usr'.repeat(33)} | ${username_size}
-    ${'email'}    | ${null}             | ${email_null}
-    ${'email'}    | ${'mail.com'}       | ${email_invalid}
-    ${'email'}    | ${'user@mail'}      | ${email_invalid}
-    ${'password'} | ${null}             | ${password_null}
-    ${'password'} | ${'P4ssw'}          | ${password_size}
-    ${'password'} | ${'alllowercase'}   | ${password_pattern}
-    ${'password'} | ${'ALLUPERCASE'}    | ${password_pattern}
-    ${'password'} | ${'12345678'}       | ${password_pattern}
-    ${'password'} | ${'lowerUPPER'}     | ${password_pattern}
-    ${'password'} | ${'lower12345'}     | ${password_pattern}
-    ${'password'} | ${'UPPER12345'}     | ${password_pattern}
+    field         | value             | expectedMessage
+    ${'username'} | ${null}           | ${username_null}
+    ${'username'} | ${'usr'}          | ${username_size}
+    ${'username'} | ${'a'.repeat(33)} | ${username_size}
+    ${'email'}    | ${null}           | ${email_null}
+    ${'email'}    | ${'mail.com'}     | ${email_invalid}
+    ${'email'}    | ${'user@mail'}    | ${email_invalid}
+    ${'password'} | ${null}           | ${password_null}
+    ${'password'} | ${'P4ssw'}        | ${password_size}
+    ${'password'} | ${'alllowercase'} | ${password_pattern}
+    ${'password'} | ${'ALLUPERCASE'}  | ${password_pattern}
+    ${'password'} | ${'12345678'}     | ${password_pattern}
+    ${'password'} | ${'lowerUPPER'}   | ${password_pattern}
+    ${'password'} | ${'lower12345'}   | ${password_pattern}
+    ${'password'} | ${'UPPER12345'}   | ${password_pattern}
   `(
     'returns $expectedMessage when $field is $value',
     async ({ field, expectedMessage, value }) => {
@@ -132,7 +164,7 @@ describe('User Registation', () => {
     const savedUser = user[0];
     expect(savedUser.inactive).toBe(true);
   });
-  it('create user in inactive mode even the request body cotains inactive to be true', async () => {
+  it('create user in inactive mode even the request body cotains inactive is true', async () => {
     const user = { ...validUser, inactive: true };
     await postUser(user);
     const res = await User.findAll();
@@ -140,7 +172,7 @@ describe('User Registation', () => {
 
     expect(savedUser.inactive).toBe(true);
   });
-  it('create an activation for user', async () => {
+  it('create an activation token for user', async () => {
     await postUser();
     const user = await User.findAll();
     const savedUser = user[0];
@@ -148,12 +180,26 @@ describe('User Registation', () => {
   });
   it('send an Account activation email with activetionToken', async () => {
     await postUser();
-    const lastMail = nodmailerStub.interactsWithMail.lastMail();
-    expect(lastMail.to[0]).toBe('user1@mail.com');
-
     const users = await User.findAll();
     const savedUser = users[0];
-    expect(lastMail.content).toContain(savedUser.activationToken);
+    expect(lastMail).toContain('user1@mail.com');
+    expect(lastMail).toContain(savedUser.activationToken);
+  });
+  it('return 502 Bad gateway when sending email fails', async () => {
+    simulateSmtpFailure = true;
+    const response = await postUser();
+    expect(response.status).toBe(502);
+  });
+  it('return Email failure message when sending email fails', async () => {
+    simulateSmtpFailure = true;
+    const response = await postUser();
+    expect(response.body.message).toBe('E-mail Failure');
+  });
+  it('does not save user into database if activation email fails', async () => {
+    simulateSmtpFailure = true;
+    await postUser();
+    const users = await User.findAll();
+    expect(users.length).toBe(0);
   });
 });
 
@@ -181,6 +227,7 @@ describe('Internationalization', () => {
 
   const email_inuse = 'Email ถูกใช้งานแล้ว';
   const user_create_success = 'สร้างข้อมูลผู้ใช้งานสำเร็จ';
+  const email_failure = 'เกิดข้อผิดพลาด การส่ง อีเมล';
 
   it.each`
     field         | value               | expectedMessage
@@ -226,5 +273,11 @@ describe('Internationalization', () => {
     const res = await postUser({ ...validUser }, { language: 'th' });
 
     expect(res.body.message).toBe(user_create_success);
+  });
+
+  it(`return ${email_failure} message when sending email fails and language is thai`, async () => {
+    simulateSmtpFailure = true;
+    const response = await postUser();
+    expect(response.body.message).toBe(email_failure);
   });
 });
