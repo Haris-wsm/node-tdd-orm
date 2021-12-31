@@ -364,7 +364,7 @@ describe('Account activation', () => {
     ${'th'}  | ${'correct'} | ${'บัญชี activated สำเร็จ'}
     ${'en'}  | ${'correct'} | ${'Account is activated'}
   `(
-    `return $message when token is $tokenStatus is sent and laguage is $language`,
+    `return $message when token is $tokenStatus is sent and language is $language`,
     async ({ language, tokenStatus, message }) => {
       await postUser();
       let token = 'this-token-does-not-exist';

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
-    "test": "cross-env NODE_ENV=test jest --watch"
+    "test": "cross-env NODE_ENV=test jest --watch --verbose"
   },
   "jest": {
     "watchPlugins": [

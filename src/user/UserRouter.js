@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 
 const UserService = require('./UserService');
 const ValidationErrors = require('../error/ValidationException');
+const pagination = require('../middleware/pagination');
 
 router.post(
   '/users',
@@ -57,6 +58,21 @@ router.post('/users/token/:token', async (req, res, next) => {
     res.send({ message: req.t('account_activation_success') });
   } catch (err) {
     next(err);
+  }
+});
+
+router.get('/users', pagination, async (req, res) => {
+  const { page, size } = req.pagination;
+  const users = await UserService.getUsers(page, size);
+  res.send(users);
+});
+
+router.get('/users/:id', async (req, res, next) => {
+  try {
+    const user = await UserService.getUser(req.params.id);
+    res.send(user);
+  } catch (error) {
+    next(error);
   }
 });
 
