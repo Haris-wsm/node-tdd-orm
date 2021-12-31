@@ -10,5 +10,6 @@
   "user_create_success": "สร้างข้อมูลผู้ใช้งานสำเร็จ",
   "email_failure": "เกิดข้อผิดพลาด การส่ง อีเมล",
   "account_activation_failure": "บัญชีผู้ใช้กำลัง active หรือ Token ไม่ถูกต้อง",
-  "account_activation_success": "บัญชี activated สำเร็จ"
+  "account_activation_success": "บัญชี activated สำเร็จ",
+  "validation_failure": "ข้อมูลไม่ถูกต้อง"
 }

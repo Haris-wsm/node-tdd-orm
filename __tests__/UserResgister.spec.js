@@ -3,7 +3,6 @@ const app = require('../src/app');
 
 const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
-// const nodmailerStub = require('nodemailer-stub');
 const SMTPSERVER = require('smtp-server').SMTPServer;
 
 let lastMail, server;
@@ -120,6 +119,8 @@ describe('User Registation', () => {
 
   const email_inuse = 'Email in use';
 
+  const validation_failure = 'Validation failure';
+
   it.each`
     field         | value             | expectedMessage
     ${'username'} | ${null}           | ${username_null}
@@ -164,8 +165,8 @@ describe('User Registation', () => {
     const savedUser = user[0];
     expect(savedUser.inactive).toBe(true);
   });
-  it('create user in inactive mode even the request body cotains inactive is true', async () => {
-    const user = { ...validUser, inactive: true };
+  it('create user in inactive mode even the request body cotains inactive is false', async () => {
+    const user = { ...validUser, inactive: false };
     await postUser(user);
     const res = await User.findAll();
     const savedUser = res[0];
@@ -201,6 +202,16 @@ describe('User Registation', () => {
     const users = await User.findAll();
     expect(users.length).toBe(0);
   });
+
+  it('returns validation failure message in error response body when validation fails', async () => {
+    const response = await postUser({
+      username: null,
+      email: 'user1@mail.com',
+      password: 'P4ssword'
+    });
+
+    expect(response.body.message).toBe('Validation failure');
+  });
 });
 
 describe('Internationalization', () => {
@@ -228,6 +239,7 @@ describe('Internationalization', () => {
   const email_inuse = 'Email ถูกใช้งานแล้ว';
   const user_create_success = 'สร้างข้อมูลผู้ใช้งานสำเร็จ';
   const email_failure = 'เกิดข้อผิดพลาด การส่ง อีเมล';
+  const validation_failure = 'ข้อมูลไม่ถูกต้อง';
 
   it.each`
     field         | value               | expectedMessage
@@ -279,6 +291,19 @@ describe('Internationalization', () => {
     simulateSmtpFailure = true;
     const response = await postUser();
     expect(response.body.message).toBe(email_failure);
+  });
+
+  it(`returns ${validation_failure} message in error response body when validation fails`, async () => {
+    const response = await postUser(
+      {
+        username: null,
+        email: 'user1@mail.com',
+        password: 'P4ssword'
+      },
+      { language: 'th' }
+    );
+
+    expect(response.body.message).toBe(validation_failure);
   });
 });
 
@@ -357,4 +382,58 @@ describe('Account activation', () => {
       expect(response.body.message).toBe(message);
     }
   );
+});
+
+describe('Error model', () => {
+  it('returns path, timestamp, message and validationErrors in response when validation failure', async () => {
+    const response = await postUser({ ...validUser, username: null });
+    const body = response.body;
+    expect(Object.keys(body)).toEqual([
+      'path',
+      'timestamp',
+      'message',
+      'validationErrors'
+    ]);
+  });
+
+  it('returns path, timestamp, message in response when request fails other than validation error', async () => {
+    await postUser();
+    const token = 'this-token-does-not-exist';
+
+    const response = await request(app)
+      .post('/api/1.0/users/token/' + token)
+      .send();
+
+    expect(Object.keys(response.body)).toEqual([
+      'path',
+      'timestamp',
+      'message'
+    ]);
+  });
+  it('returns path in error body', async () => {
+    await postUser();
+    const token = 'this-token-does-not-exist';
+
+    const response = await request(app)
+      .post('/api/1.0/users/token/' + token)
+      .send();
+
+    const body = response.body;
+
+    expect(body.path).toEqual('/api/1.0/users/token/' + token);
+  });
+  it('returns timestamp in millisecond within 5 seconds value in error body', async () => {
+    const nowInMilli = new Date().getTime();
+    const fiveSecondLater = nowInMilli + 5 * 1000;
+    await postUser();
+    const token = 'this-token-does-not-exist';
+    const response = await request(app)
+      .post('/api/1.0/users/token/' + token)
+      .send();
+
+    const body = response.body;
+
+    expect(body.timestamp).toBeGreaterThan(nowInMilli);
+    expect(body.timestamp).toBeLessThan(fiveSecondLater);
+  });
 });
