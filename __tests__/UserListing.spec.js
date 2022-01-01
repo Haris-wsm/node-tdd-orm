@@ -3,14 +3,15 @@ const app = require('../src/app');
 
 const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
-const { util } = require('config');
+const en = require('../locals/en/translation.json');
+const th = require('../locals/th/translation.json');
 
 beforeAll(async () => {
   return sequelize.sync();
 });
 
-beforeEach(() => {
-  return User.destroy({ truncate: true });
+beforeEach(async () => {
+  await User.destroy({ truncate: true });
 });
 
 const getUsers = () => {
@@ -115,8 +116,8 @@ describe('Get user', () => {
 
   it.each`
     language | message
-    ${'th'}  | ${'ไม่พบข้อมูลผู้ใช้งาน'}
-    ${'en'}  | ${'User not found'}
+    ${'th'}  | ${th.user_not_found}
+    ${'en'}  | ${en.user_not_found}
   `(
     'returns $message for unknown user when language is set to $language',
     async ({ language, message }) => {

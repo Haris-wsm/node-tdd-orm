@@ -12,5 +12,7 @@
   "account_activation_failure": "บัญชีผู้ใช้กำลัง active หรือ Token ไม่ถูกต้อง",
   "account_activation_success": "บัญชี activated สำเร็จ",
   "validation_failure": "ข้อมูลไม่ถูกต้อง",
-  "user_not_found": "ไม่พบข้อมูลผู้ใช้งาน"
+  "user_not_found": "ไม่พบข้อมูลผู้ใช้งาน",
+  "authentication_failure": "credentails ไม่ถูกต้อง",
+  "inactive_authentication_failure": "บัญชีไม่ถูกเปิดใช้งาน"
 }
