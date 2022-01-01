@@ -67,14 +67,14 @@ describe('Authentication', () => {
   });
 
   it('returns proper error body when authentication fails', async () => {
-    const nowInmilli = new Date().getTime();
+    const nowInMilli = new Date().getTime();
     const response = await postAuthentication({
       email: 'user1@mail.com',
       password: 'P4ssword'
     });
 
     const error = response.body;
-    expect(error.timestamp).toBeGreaterThan(nowInmilli);
+    expect(error.timestamp).toBeGreaterThan(nowInMilli);
     expect(Object.keys(error)).toEqual(['path', 'timestamp', 'message']);
   });
 
