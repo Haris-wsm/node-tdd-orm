@@ -5,6 +5,7 @@ const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
 const en = require('../locals/en/translation.json');
 const th = require('../locals/th/translation.json');
+const bcrypt = require('bcrypt');
 
 beforeAll(async () => {
   return sequelize.sync();
@@ -14,16 +15,24 @@ beforeEach(async () => {
   await User.destroy({ truncate: true });
 });
 
-const getUsers = () => {
-  return request(app).get('/api/1.0/users');
+const getUsers = (options = {}) => {
+  const agent = request(app).get('/api/1.0/users');
+
+  if (options.auth) {
+    const { email, password } = options.auth;
+    agent.auth(email, password);
+  }
+  return agent;
 };
 
 const addUser = async (activeUserCount, inactiveUserCount = 0) => {
+  const hash = await bcrypt.hash('P4ssword', 10);
   for (let i = 0; i < activeUserCount + inactiveUserCount; i++) {
     await User.create({
       username: `user${i + 1}`,
       email: `user${i + 1}@mail.com`,
-      inactive: i >= activeUserCount
+      inactive: i >= activeUserCount,
+      password: hash
     });
   }
 };
@@ -102,6 +111,14 @@ describe('Listung Users', () => {
     const response = await getUsers().query({ size: 'size', psge: 'page' });
     expect(response.body.page).toBe(0);
     expect(response.body.size).toBe(10);
+  });
+  it('returns user page without logged in user when request is valid authorization', async () => {
+    await addUser(11);
+
+    const response = await getUsers({
+      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+    });
+    expect(response.body.totalPages).toBe(1);
   });
 });
 
