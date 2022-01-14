@@ -15,5 +15,6 @@
   "user_not_found": "ไม่พบข้อมูลผู้ใช้งาน",
   "authentication_failure": "credentails ไม่ถูกต้อง",
   "inactive_authentication_failure": "บัญชีไม่ถูกเปิดใช้งาน",
-  "unauthorized_user_update": "คุณไม่ได้รับอนุญาตให้อัปเดตผู้ใช้"
+  "unauthorized_user_update": "คุณไม่ได้รับอนุญาตให้อัปเดตผู้ใช้",
+  "unauthorized_user_delete": "คุณไม่ได้รับอนุญาตให้ลบผู้ใช้"
 }

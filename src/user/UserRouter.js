@@ -7,8 +7,6 @@ const ValidationErrors = require('../error/ValidationException');
 const pagination = require('../middleware/pagination');
 const ForbiddenException = require('../error/ForbiddenException');
 
-const basicAuthentication = require('../middleware/basicAuthentication');
-
 router.post(
   '/users',
   check('username')
@@ -64,7 +62,7 @@ router.post('/users/token/:token', async (req, res, next) => {
   }
 });
 
-router.get('/users', pagination, basicAuthentication, async (req, res) => {
+router.get('/users', pagination, async (req, res) => {
   const autheticatedUser = req.authenticatedUser;
 
   const { page, size } = req.pagination;
@@ -81,7 +79,7 @@ router.get('/users/:id', async (req, res, next) => {
   }
 });
 
-router.put('/users/:id', basicAuthentication, async (req, res, next) => {
+router.put('/users/:id', async (req, res, next) => {
   const autheticatedUser = req.authenticatedUser;
 
   if (!autheticatedUser || autheticatedUser.id != req.params.id) {
@@ -90,6 +88,18 @@ router.put('/users/:id', basicAuthentication, async (req, res, next) => {
 
   await UserService.updateUser(req.params.id, req.body);
   return res.send();
+});
+
+router.delete('/users/:id', async (req, res, next) => {
+  const autheticatedUser = req.authenticatedUser;
+
+  if (!autheticatedUser || autheticatedUser.id != req.params.id) {
+    return next(new ForbiddenException('unauthorized_user_delete'));
+  }
+
+  await UserService.deleteUser(req.params.id);
+
+  res.send();
 });
 
 module.exports = router;
