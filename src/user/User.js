@@ -11,7 +11,9 @@ User.init(
     email: { type: Sequelize.STRING },
     password: { type: Sequelize.STRING },
     inactive: { type: Sequelize.BOOLEAN, defaultValue: true },
-    activationToken: { type: Sequelize.STRING }
+    activationToken: { type: Sequelize.STRING },
+    passwordResetToken: { type: Sequelize.STRING },
+    image: { type: Sequelize.STRING }
   },
   { sequelize, modelName: 'user' }
 );

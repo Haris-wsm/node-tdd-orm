@@ -71,11 +71,11 @@ describe('Listung Users', () => {
     const response = await getUsers();
     expect(response.body.content.length).toBe(6);
   });
-  it('returns only id, username and email in content array in each user', async () => {
+  it('returns only id, username, email and image in content array in each user', async () => {
     await addUser(6, 5);
     const response = await getUsers();
     const user = response.body.content[0];
-    expect(Object.keys(user)).toEqual(['id', 'username', 'email']);
+    expect(Object.keys(user)).toEqual(['id', 'username', 'email', 'image']);
   });
   it('returns 2 as totalPages when there are 15 active and 7 inactive user', async () => {
     await addUser(15, 7);
@@ -126,7 +126,6 @@ describe('Listung Users', () => {
     const token = await auth({
       auth: { email: 'user1@mail.com', password: 'P4ssword' }
     });
-    console.log(token);
 
     const response = await getUsers({
       token: token
@@ -173,7 +172,7 @@ describe('Get user', () => {
     const respone = await gerUser(user.id);
     expect(respone.status).toBe(200);
   });
-  it('returns id, username and email in response body', async () => {
+  it('returns id, username, email and image in response body', async () => {
     const user = await User.create({
       username: 'user1',
       email: 'user1@mail.com',
@@ -181,7 +180,12 @@ describe('Get user', () => {
     });
 
     const respone = await gerUser(user.id);
-    expect(Object.keys(respone.body)).toEqual(['id', 'username', 'email']);
+    expect(Object.keys(respone.body)).toEqual([
+      'id',
+      'username',
+      'email',
+      'image'
+    ]);
   });
   it('returns 404 when the user inactive', async () => {
     const user = await User.create({

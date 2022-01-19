@@ -7,6 +7,15 @@ const middleware = require('i18next-http-middleware');
 const ErrorHandler = require('./error/ErrorHandler');
 const tokenAuthentication = require('./middleware/tokenAuthentication');
 
+const FileService = require('./file/FileService');
+const config = require('config');
+const path = require('path');
+
+const { uploadDir, profileDir } = config;
+const profileDirectory = path.join('.', uploadDir, profileDir);
+
+const ONE_YEAR_IN_MILLI = 365 * 24 * 60 * 60 * 1000;
+
 i18next
   .use(Backend)
   .use(middleware.LanguageDetector)
@@ -23,10 +32,17 @@ i18next
     }
   });
 
+FileService.createFolders();
+
 const app = express();
 app.use(middleware.handle(i18next));
 
-app.use(express.json());
+app.use(express.json({ limit: '3mb' }));
+
+app.use(
+  '/images',
+  express.static(profileDirectory, { maxAge: ONE_YEAR_IN_MILLI })
+);
 
 app.use(tokenAuthentication);
 app.use('/api/1.0', UserRouter);

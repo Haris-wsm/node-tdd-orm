@@ -7,6 +7,8 @@ const SMTPSERVER = require('smtp-server').SMTPServer;
 const en = require('../locals/en/translation.json');
 const th = require('../locals/th/translation.json');
 
+const config = require('config');
+
 let lastMail, server;
 let simulateSmtpFailure = false;
 
@@ -32,14 +34,14 @@ beforeAll(async () => {
     }
   });
 
-  await server.listen(8587, 'localhost');
+  await server.listen(config.mail.port, 'localhost');
 
   return sequelize.sync();
 });
 
 beforeEach(async () => {
   simulateSmtpFailure = false;
-  await User.destroy({ truncate: { cascade: true } });
+  await User.destroy({ truncate: true });
 });
 
 afterAll(async () => {

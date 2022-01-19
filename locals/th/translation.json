@@ -16,5 +16,10 @@
   "authentication_failure": "credentails ไม่ถูกต้อง",
   "inactive_authentication_failure": "บัญชีไม่ถูกเปิดใช้งาน",
   "unauthorized_user_update": "คุณไม่ได้รับอนุญาตให้อัปเดตผู้ใช้",
-  "unauthorized_user_delete": "คุณไม่ได้รับอนุญาตให้ลบผู้ใช้"
+  "unauthorized_user_delete": "คุณไม่ได้รับอนุญาตให้ลบผู้ใช้",
+  "email_not_inuse": "ไม่พบอีเมล",
+  "password_reset_request_success": "ตรวจสอบ อีเมลล์สำหรับ รีเซ็ต password",
+  "unauthorize_password_reset": "คุณไม่ได้รับอนุญาติในการอัปเดตรหัสผ่าน กรุณาทำตามขั้นตอนที่กำหนด",
+  "profile_image_size": "ขนาดรูปภาพไม่ควรเกิน 2MB",
+  "unsupported_image_file": "เฉพาะไฟล์ประเภท JPEG หรือ PNG เท่านั้น"
 }

@@ -16,5 +16,10 @@
   "authentication_failure": "Incorrect credentails",
   "inactive_authentication_failure": "Account is inactive",
   "unauthorized_user_update": "You are not authorized to update user",
-  "unauthorized_user_delete": "You are not authorized to delete user"
+  "unauthorized_user_delete": "You are not authorized to delete user",
+  "email_not_inuse": "Email not found",
+  "password_reset_request_success": "Check your e-mail for reset password",
+  "unauthorize_password_reset": "You are not authorized to update your password. Please follow the password reset step again",
+  "profile_image_size": "Your profile image cnnot be bigger than 2MB",
+  "unsupported_image_file": "Only JPEG or ONG files are allow"
 }

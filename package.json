@@ -6,12 +6,17 @@
   "scripts": {
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
-    "test": "cross-env NODE_ENV=test jest --watch --verbose"
+    "test": "cross-env NODE_ENV=test jest --watch --verbose",
+    "posttest": "cross-env NODE_ENV=test node test-cleanup"
   },
   "jest": {
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/config/"
     ]
   },
   "author": "Haris Waesamah",
@@ -21,6 +26,7 @@
     "config": "^3.3.6",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "file-type": "^14.7.0",
     "i18next": "^21.6.4",
     "i18next-fs-backend": "^1.1.4",
     "i18next-http-middleware": "^3.1.5",
