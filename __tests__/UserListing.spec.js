@@ -8,7 +8,10 @@ const th = require('../locals/th/translation.json');
 const bcrypt = require('bcrypt');
 
 beforeAll(async () => {
-  return sequelize.sync();
+  if (process.env.NODE_ENV === 'test') {
+    await sequelize.sync();
+  }
+  jest.setTimeout(20000);
 });
 
 beforeEach(async () => {

@@ -14,8 +14,11 @@ const config = require('config');
 const { uploadDir, profileDir } = config;
 const profileDirectory = path.join('.', uploadDir, profileDir);
 
-beforeAll(() => {
-  return sequelize.sync();
+beforeAll(async () => {
+  if (process.env.NODE_ENV === 'test') {
+    await sequelize.sync();
+  }
+  jest.setTimeout(20000);
 });
 
 beforeEach(() => {

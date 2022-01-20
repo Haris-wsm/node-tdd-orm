@@ -37,7 +37,9 @@ beforeAll(async () => {
   });
 
   await server.listen(config.mail.port, 'localhost');
-  return sequelize.sync();
+  if (process.env.NODE_ENV === 'test') {
+    return sequelize.sync();
+  }
 });
 
 beforeEach(() => {
@@ -326,7 +328,7 @@ describe('Password Update', () => {
     await Token.create({
       token: 'token-1',
       userId: user.id,
-      lastUsedAt: Date.now()
+      lastUseAt: Date.now()
     });
 
     await putPasswordUpdate({
