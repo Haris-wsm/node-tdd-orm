@@ -11,7 +11,7 @@ const customFormat = format.combine(
 
 const destination = [new transports.Console()];
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'staging') {
   destination.push(new transports.File({ filename: 'app.log' }));
 }
 
@@ -19,7 +19,7 @@ const logger = createLogger({
   transports: destination,
   level: 'debug',
   format: customFormat,
-  silent: process.env.NODE_ENV == 'test' || process.env.NODE_ENV === 'staging'
+  silent: process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'staging'
 });
 
 module.exports = logger;

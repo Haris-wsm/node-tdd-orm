@@ -1,18 +1,2 @@
-{"level":"error","message":"error"}
-{"level":"warn","message":"warn"}
-{"level":"info","message":"info"}
-{"level":"verbose","message":"verbose"}
-{"level":"debug","message":"debug"}
-{"level":"info","message":"app is running"}
-{"level":"error","message":"error"}
-{"level":"error","message":"error"}
-{"level":"error","message":"error"}
-{"level":"error","message":"error"}
-{"level":"error","message":"error"}
-{"level":"error","message":"error"}
-2022-01-20T11:57:36.601Z error error
-2022-01-20T11:57:58.042Z [error] error
-2022-01-20T11:58:02.509Z [error] : error
-2022-01-20T11:58:44.354Z [error  ] : error
-2022-01-20T11:59:40.245Z [ERROR  ] : error
-2022-01-20T12:00:32.559Z [ERROR  ] : error
+2022-01-24T11:12:54.459Z [INFO   ] : app is running. version: 1.0.2
+2022-01-24T11:13:08.083Z [INFO   ] : app is running. version: 1.0.2
