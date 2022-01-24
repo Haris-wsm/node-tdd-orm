@@ -11,7 +11,7 @@ const customFormat = format.combine(
 
 const destination = [new transports.Console()];
 
-if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'staging') {
+if (process.env.NODE_ENV === 'production') {
   destination.push(new transports.File({ filename: 'app.log' }));
 }
 
