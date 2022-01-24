@@ -37,7 +37,7 @@ jobs:
         username: ${{secrets.GOOGLE_CLOUD_VM_NAME}}
         script: |
           pm2 delete all
-          cd /var/app/node-tdd
+          cd /var/app/node-tdd-orm
           git pull
           npm install
           pm2 start npm -- start
