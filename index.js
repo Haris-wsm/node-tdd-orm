@@ -9,4 +9,5 @@ TokenService.scheduleCleanup();
 
 app.listen(process.env.PORT || 3000, () => {
   logger.info('app is running. version: ' + process.env.npm_package_version);
+  logger.info('ENV: ' + process.env.NODE_ENV);
 });
