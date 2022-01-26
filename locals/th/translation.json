@@ -21,5 +21,8 @@
   "password_reset_request_success": "ตรวจสอบ อีเมลล์สำหรับ รีเซ็ต password",
   "unauthorize_password_reset": "คุณไม่ได้รับอนุญาติในการอัปเดตรหัสผ่าน กรุณาทำตามขั้นตอนที่กำหนด",
   "profile_image_size": "ขนาดรูปภาพไม่ควรเกิน 2MB",
-  "unsupported_image_file": "เฉพาะไฟล์ประเภท JPEG หรือ PNG เท่านั้น"
+  "unsupported_image_file": "เฉพาะไฟล์ประเภท JPEG หรือ PNG เท่านั้น",
+  "unauthorized_hoax_submit": "คุณไม่ได้ยืนยันตัวตน สำหรับการสร้าง hoax",
+  "hoax_submit_success": "Hoax ถูกบันทึกเรียบร้อย",
+  "hoax_content_size": "ความยาวข้อความอย่างน้อย 10 ถึง 5000 ตัวอักษร"
 }

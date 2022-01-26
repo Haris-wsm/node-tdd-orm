@@ -24,7 +24,6 @@ router.post(
       return next(new AuthenticationException());
     }
     const { email, password } = req.body;
-
     const user = await UserService.findByEmail(email);
 
     if (!user) return next(new AuthenticationException());

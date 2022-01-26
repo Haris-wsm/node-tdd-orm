@@ -55,6 +55,8 @@ const activeUser = {
   inactive: false,
   password: 'P4ssword'
 };
+
+const credentails = { email: 'user1@mail.com', password: 'P4ssword' };
 const addUser = async (user = { ...activeUser }) => {
   const hash = await bcrypt.hash(user.password, 10);
   user.password = hash;
@@ -115,7 +117,7 @@ describe('User update', () => {
       email: 'user2@mail.com'
     });
     const response = await putUser(userTobeUpdated.id, null, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     expect(response.status).toBe(403);
@@ -124,7 +126,7 @@ describe('User update', () => {
     const user = await addUser({ ...activeUser, inactive: true });
 
     const response = await putUser(user.id, null, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     expect(response.status).toBe(403);
@@ -133,7 +135,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated' };
     const response = await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     expect(response.status).toBe(200);
@@ -142,7 +144,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated' };
     await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     const inDBUser = await User.findOne({ where: { id: savedUser.id } });
@@ -157,7 +159,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated', image: fileBase64 };
     await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     const inDBUser = await User.findOne({ where: { id: savedUser.id } });
@@ -168,7 +170,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated', image: fileBase64 };
     const response = await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     expect(Object.keys(response.body)).toEqual(['id', 'username', 'image']);
@@ -179,7 +181,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated', image: fileBase64 };
     await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     const inDBUser = await User.findOne({ where: { id: savedUser.id } });
@@ -192,12 +194,12 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated', image: fileBase64 };
     const response = await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     const firstImage = response.body.image;
     await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     const profileImageDir = path.join(profileDirectory, firstImage);
@@ -218,7 +220,7 @@ describe('User update', () => {
       const savedUser = await addUser();
       const invalidUpdate = { username: value };
       const response = await putUser(savedUser.id, invalidUpdate, {
-        auth: { email: 'user1@mail.com', password: 'P4ssword' },
+        auth: credentails,
         language: language
       });
 
@@ -238,7 +240,7 @@ describe('User update', () => {
       image: testPng + fillBase64
     };
     const response = await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     expect(response.status).toBe(200);
   });
@@ -248,7 +250,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const invalidUpdate = { username: 'user-updated', image: base64 };
     const response = await putUser(savedUser.id, invalidUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     expect(response.status).toBe(400);
@@ -259,7 +261,7 @@ describe('User update', () => {
     const savedUser = await addUser();
     const validUpdate = { username: 'user-1-updated', image: fileBase64 };
     const response = await putUser(savedUser.id, validUpdate, {
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
 
     const firstImage = response.body.image;
@@ -267,7 +269,7 @@ describe('User update', () => {
       savedUser.id,
       { username: 'update-username2' },
       {
-        auth: { email: 'user1@mail.com', password: 'P4ssword' }
+        auth: credentails
       }
     );
 
@@ -289,7 +291,7 @@ describe('User update', () => {
       const savedUser = await addUser();
       const invalidUpdate = { username: 'user-updated', image: base64 };
       const response = await putUser(savedUser.id, invalidUpdate, {
-        auth: { email: 'user1@mail.com', password: 'P4ssword' },
+        auth: credentails,
         language
       });
 
@@ -310,7 +312,7 @@ describe('User update', () => {
       const savedUser = await addUser();
       const updateBody = { username: 'user-1-updated', image: fileBase64 };
       const response = await putUser(savedUser.id, updateBody, {
-        auth: { email: 'user1@mail.com', password: 'P4ssword' }
+        auth: credentails
       });
 
       expect(response.status).toBe(status);
@@ -333,7 +335,7 @@ describe('User update', () => {
       const savedUser = await addUser();
       const updateBody = { username: 'user-1-updated', image: fileBase64 };
       const response = await putUser(savedUser.id, updateBody, {
-        auth: { email: 'user1@mail.com', password: 'P4ssword' },
+        auth: credentails,
         language
       });
 

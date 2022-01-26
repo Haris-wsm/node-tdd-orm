@@ -49,7 +49,7 @@ const addUser = async (activeUserCount, inactiveUserCount = 0) => {
   }
 };
 
-describe('Listung Users', () => {
+describe('Listing Users', () => {
   it('returns 200 ok when there is no user in database', async () => {
     const response = await getUsers();
     expect(response.status).toBe(200);

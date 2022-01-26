@@ -3,6 +3,7 @@ const app = require('../src/app');
 
 const User = require('../src/user/User');
 const Token = require('../src/auth/Token');
+const Hoax = require('../src/hoax/Hoax');
 const sequelize = require('../src/config/database');
 const bcrypt = require('bcrypt');
 const en = require('../locals/en/translation.json');
@@ -39,6 +40,8 @@ const activeUser = {
   inactive: false,
   password: 'P4ssword'
 };
+
+const credentails = { email: 'user1@mail.com', password: 'P4ssword' };
 const addUser = async (user = { ...activeUser }) => {
   const hash = await bcrypt.hash(user.password, 10);
   user.password = hash;
@@ -88,7 +91,7 @@ describe('User Delete', () => {
     });
 
     const token = await auth({
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     const response = await deleteUser(userToBeDelete.id, {
       token: token
@@ -105,7 +108,7 @@ describe('User Delete', () => {
     const savedUser = await addUser();
 
     const token = await auth({
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     const response = await deleteUser(savedUser.id, {
       token: token
@@ -116,7 +119,7 @@ describe('User Delete', () => {
   it('deletes user from database when request is sent from authorize user', async () => {
     const savedUser = await addUser();
     const token = await auth({
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     await deleteUser(savedUser.id, {
       token: token
@@ -127,7 +130,7 @@ describe('User Delete', () => {
   it('deletes token from database when delete user requestt is sent from authorize user', async () => {
     const savedUser = await addUser();
     const token = await auth({
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     await deleteUser(savedUser.id, {
       token: token
@@ -139,10 +142,10 @@ describe('User Delete', () => {
   it('deletes all token from database when delete user requestt is sent from authorize user', async () => {
     const savedUser = await addUser();
     const token1 = await auth({
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     const token2 = await auth({
-      auth: { email: 'user1@mail.com', password: 'P4ssword' }
+      auth: credentails
     });
     await deleteUser(savedUser.id, {
       token: token1
@@ -150,5 +153,23 @@ describe('User Delete', () => {
 
     const tokenInD = await Token.findOne({ where: { token: token2 } });
     expect(tokenInD).toBeNull();
+  });
+
+  it('deletes hoax from database when delete user request sent from authorized', async () => {
+    const savedUser = await addUser();
+    const token = await auth({
+      auth: credentails
+    });
+
+    await request(app)
+      .post('/api/1.0/hoaxes')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ content: 'Hoax content' });
+
+    await deleteUser(savedUser.id, {
+      token: token
+    });
+    const hoaxes = await Hoax.findAll();
+    expect(hoaxes.length).toBe(0);
   });
 });
