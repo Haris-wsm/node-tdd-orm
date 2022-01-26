@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
-require('pg').defaults.parseInt8 = true;
+// require('pg').defaults.parseInt8 = true;
 const Model = Sequelize.Model;
 
 class Hoax extends Model {}
