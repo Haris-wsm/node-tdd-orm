@@ -2,6 +2,7 @@ const express = require('express');
 const UserRouter = require('./user/UserRouter');
 const AuthenticationRouter = require('./auth/AuthenticationRouters');
 const HoaxRouter = require('./hoax/HoaxRouter');
+const FileRouter = require('./file/FileRouter');
 
 const i18next = require('i18next');
 const Backend = require('i18next-fs-backend');
@@ -13,8 +14,9 @@ const FileService = require('./file/FileService');
 const config = require('config');
 const path = require('path');
 
-const { uploadDir, profileDir } = config;
+const { uploadDir, profileDir, attachmentDir } = config;
 const profileDirectory = path.join('.', uploadDir, profileDir);
+const attachmentDirectory = path.join('.', uploadDir, attachmentDir);
 
 const ONE_YEAR_IN_MILLI = 365 * 24 * 60 * 60 * 1000;
 
@@ -45,11 +47,16 @@ app.use(
   '/images',
   express.static(profileDirectory, { maxAge: ONE_YEAR_IN_MILLI })
 );
+app.use(
+  '/attachments',
+  express.static(attachmentDirectory, { maxAge: ONE_YEAR_IN_MILLI })
+);
 
 app.use(tokenAuthentication);
 app.use('/api/1.0', UserRouter);
 app.use('/api/1.0', AuthenticationRouter);
 app.use('/api/1.0', HoaxRouter);
+app.use('/api/1.0', FileRouter);
 
 app.use(ErrorHandler);
 

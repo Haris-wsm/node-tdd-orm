@@ -16,5 +16,6 @@ module.exports = {
     }
   },
   uploadDir: 'uploads-productions',
-  profileDir: 'profile'
+  profileDir: 'profile',
+  attachmentDir: 'attachment'
 };

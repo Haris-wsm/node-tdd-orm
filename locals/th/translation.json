@@ -24,5 +24,6 @@
   "unsupported_image_file": "เฉพาะไฟล์ประเภท JPEG หรือ PNG เท่านั้น",
   "unauthorized_hoax_submit": "คุณไม่ได้ยืนยันตัวตน สำหรับการสร้าง hoax",
   "hoax_submit_success": "Hoax ถูกบันทึกเรียบร้อย",
-  "hoax_content_size": "ความยาวข้อความอย่างน้อย 10 ถึง 5000 ตัวอักษร"
+  "hoax_content_size": "ความยาวข้อความอย่างน้อย 10 ถึง 5000 ตัวอักษร",
+  "attachment_size_limit": "ขนาดไฟล์ไม่ควรเกิน 5mb"
 }

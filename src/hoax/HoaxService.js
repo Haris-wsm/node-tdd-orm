@@ -1,6 +1,8 @@
 const NotFoundException = require('../error/NotFoundException');
 const Hoax = require('../hoax/Hoax');
 const User = require('../user/User');
+const FileService = require('../file/FileService');
+const FileAttactment = require('../file/FileAttachment');
 
 const save = async (body, user) => {
   const hoax = {
@@ -8,7 +10,11 @@ const save = async (body, user) => {
     timestamp: Date.now(),
     userId: user.id
   };
-  await Hoax.create(hoax);
+  const { id } = await Hoax.create(hoax);
+
+  if (body.fileAttachment) {
+    await FileService.associateFileToHoax(body.fileAttachment, id);
+  }
 };
 
 const getHoaxes = async (page, size, userId) => {
@@ -24,18 +30,32 @@ const getHoaxes = async (page, size, userId) => {
   }
   const hoaxesWithCount = await Hoax.findAndCountAll({
     attributes: ['id', 'content', 'timestamp'],
-    include: {
-      model: User,
-      as: 'user',
-      attributes: ['id', 'username', 'email', 'image'],
-      where: where
-    },
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['id', 'username', 'email', 'image'],
+        where: where
+      },
+      {
+        model: FileAttactment,
+        as: 'fileAttachment',
+        attributes: ['filename', 'fileType']
+      }
+    ],
     order: [['id', 'DESC']],
     limit: size,
     offset: page * size
   });
+
   return {
-    content: hoaxesWithCount.rows,
+    content: hoaxesWithCount.rows.map((hoaxSequelize) => {
+      const haoxAsJSON = hoaxSequelize.get({ plain: true });
+      if (haoxAsJSON.fileAttachment === null) {
+        delete haoxAsJSON.fileAttachment;
+      }
+      return haoxAsJSON;
+    }),
     page,
     size,
     totalPages: Math.ceil(hoaxesWithCount.count / size)
