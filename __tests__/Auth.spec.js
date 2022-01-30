@@ -2,16 +2,9 @@ const request = require('supertest');
 const app = require('../src/app');
 const User = require('../src/user/User');
 const Token = require('../src/auth/Token');
-const sequelize = require('../src/config/database');
 const bcrypt = require('bcrypt');
 const en = require('../locals/en/translation.json');
 const th = require('../locals/th/translation.json');
-
-beforeAll(() => {
-  if (process.env.NODE_ENV === 'test') {
-    return sequelize.sync();
-  }
-});
 
 beforeEach(() => {
   return User.destroy({ truncate: { cascade: true } });

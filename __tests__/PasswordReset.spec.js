@@ -2,6 +2,8 @@ const request = require('supertest');
 const app = require('../src/app');
 const User = require('../src/user/User');
 const Token = require('../src/auth/Token');
+const FileAttachment = require('../src/file/FileAttachment');
+
 const SMTPSERVER = require('smtp-server').SMTPServer;
 
 const sequelize = require('../src/config/database');
@@ -37,9 +39,6 @@ beforeAll(async () => {
   });
 
   await server.listen(config.mail.port, 'localhost');
-  if (process.env.NODE_ENV === 'test') {
-    return sequelize.sync();
-  }
 });
 
 beforeEach(() => {

@@ -10,8 +10,6 @@ const th = require('../locals/th/translation.json');
 
 const { uploadDir, attachmentDir } = config;
 
-const sequelize = require('../src/config/database');
-
 const uploadFile = (filename = 'test-png.png', options = {}) => {
   const agent = request(app).post('/api/1.0/hoaxes/attachments');
 
@@ -24,12 +22,6 @@ const uploadFile = (filename = 'test-png.png', options = {}) => {
     path.join('.', '__tests__', 'resources', filename)
   );
 };
-
-beforeAll(async () => {
-  if (process.env.NODE_ENV === 'test') {
-    await sequelize.sync();
-  }
-});
 
 beforeEach(async () => {
   await FileAttachment.destroy({ truncate: true });

@@ -8,16 +8,10 @@ const sequelize = require('../src/config/database');
 const en = require('../locals/en/translation.json');
 const th = require('../locals/th/translation.json');
 
-beforeAll(async () => {
-  if (process.env.NODE_ENV === 'test') {
-    await sequelize.sync();
-  }
-  jest.setTimeout(20000);
-});
-
 beforeEach(async () => {
   await User.destroy({ truncate: { cascade: true } });
-  await FileAttachment.destroy({ truncate: true });
+  // await Hoax.destroy({ truncate: { cascade: true } });
+  // await FileAttachment.destroy({ truncate: true });
 });
 
 const addFileAttachment = async (hoaxId) => {

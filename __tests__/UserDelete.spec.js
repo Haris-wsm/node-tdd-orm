@@ -9,13 +9,6 @@ const bcrypt = require('bcrypt');
 const en = require('../locals/en/translation.json');
 const th = require('../locals/th/translation.json');
 
-beforeAll(async () => {
-  if (process.env.NODE_ENV === 'test') {
-    await sequelize.sync();
-  }
-  jest.setTimeout(20000);
-});
-
 beforeEach(() => {
   return User.destroy({ truncate: { cascade: true } });
 });

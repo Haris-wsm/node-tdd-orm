@@ -3,13 +3,6 @@ const Token = require('../src/auth/Token');
 
 const TokenService = require('../src/auth/TokenService');
 
-beforeAll(async () => {
-  if (process.env.NODE_ENV === 'test') {
-    await sequelize.sync();
-  }
-  jest.setTimeout(20000);
-});
-
 beforeEach(async () => {
   return await Token.destroy({ truncate: true });
 });

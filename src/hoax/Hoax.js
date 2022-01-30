@@ -18,7 +18,7 @@ Hoax.init(
   { sequelize, modelName: 'hoax', timestamps: false }
 );
 
-Hoax.hasOne(FileAttachment, { foreignKey: 'hoaxId' });
+Hoax.hasOne(FileAttachment, { foreignKey: 'hoaxId', onDelete: 'cascade' });
 FileAttachment.belongsTo(Hoax);
 
 module.exports = Hoax;
