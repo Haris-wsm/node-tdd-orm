@@ -8,6 +8,9 @@ const { uploadDir, profileDir, attachmentDir } = config;
 const profileFolder = path.join('.', uploadDir, profileDir);
 const attachmentsFolder = path.join('.', uploadDir, attachmentDir);
 
+const Sequelize = require('sequelize');
+const Hoax = require('../hoax/Hoax');
+
 const createFolders = () => {
   if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
@@ -79,6 +82,59 @@ const associateFileToHoax = async (attachmentId, hoaxId) => {
   await attachment.save();
 };
 
+const removeUnusedAttachments = async () => {
+  const ONE_DAY = 24 * 60 * 60 * 1000;
+
+  setInterval(async () => {
+    const oneDayOld = new Date(Date.now() - ONE_DAY);
+    const attachments = await FileAttactment.findAll({
+      where: {
+        uploadDate: { [Sequelize.Op.lt]: oneDayOld },
+        hoaxId: {
+          [Sequelize.Op.is]: null
+        }
+      }
+    });
+
+    for (attachment of attachments) {
+      const { filename } = attachment.get({ plain: true });
+      await fs.promises.unlink(path.join(attachmentsFolder, filename));
+      await attachment.destroy();
+    }
+  }, ONE_DAY);
+};
+const deleteAttachment = async (filename) => {
+  const filePath = path.join(attachmentsFolder, filename);
+  try {
+    await fs.promises.access(filePath);
+    await fs.promises.unlink(filePath);
+  } catch (error) {}
+};
+
+const deleteUserFiles = async (user) => {
+  if (user.image) {
+    await deleteProfileImage(user.image);
+  }
+
+  const attachments = await FileAttactment.findAll({
+    attributes: ['filename'],
+    include: {
+      model: Hoax,
+      where: {
+        userId: user.id
+      }
+    }
+  });
+
+  if (attachments.length === 0) {
+    return;
+  }
+
+  for (let attachment of attachments) {
+    deleteAttachment(attachment.getDataValue('filename'));
+  }
+};
+
 module.exports = {
   createFolders,
   saveProfileImage,
@@ -86,5 +142,8 @@ module.exports = {
   isLessThan2MB,
   isSupportedFileType,
   saveAttachment,
-  associateFileToHoax
+  associateFileToHoax,
+  removeUnusedAttachments,
+  deleteAttachment,
+  deleteUserFiles
 };

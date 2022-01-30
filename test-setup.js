@@ -6,5 +6,4 @@ beforeAll(async () => {
   if (process.env.NODE_ENV === 'test') {
     await sequelize.sync();
   }
-  await FileAttachment.destroy({ truncate: true });
 });

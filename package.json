@@ -22,7 +22,8 @@
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/test-setup.js"
-    ]
+    ],
+    "testRunner": "jest-jasmine2"
   },
   "author": "Haris Waesamah",
   "license": "ISC",

@@ -25,5 +25,6 @@
   "unauthorized_hoax_submit": "You are not authorized to post hoax",
   "hoax_submit_success": "Hoax is saved",
   "hoax_content_size": "Hoax must be min 10 and max 5000 charaters",
-  "attachment_size_limit": "Uploaded file cannot br bigger than 5mb"
+  "attachment_size_limit": "Uploaded file cannot br bigger than 5mb",
+  "unauthorized_hoax_delete": "You are not authorized to delete this hoax"
 }
