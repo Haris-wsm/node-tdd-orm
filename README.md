@@ -1,4 +1,4 @@
-<img src="https://github.com/Haris-wsm/node-tdd-orm/blob/main/git-node-tdd-header.png?raw=true" align="left" height="150" width="" />  
+<img src="https://github.com/Haris-wsm/node-tdd-orm/blob/main/git-node-tdd-header.png?raw=true" align="left" height="150" width="" /> \
 
 <br/>  
 
