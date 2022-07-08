@@ -1,5 +1,4 @@
 <img src="https://github.com/Haris-wsm/node-tdd-orm/blob/main/git-node-tdd-header.png?raw=true" align="left" height="150" width="" />
-![](./git-node-tdd-header.png =x150)
 
 <br/>  
 
@@ -48,4 +47,8 @@
 - supertest  
 
 <br />
+
+### About Project
+
+- A resful webservice with express js, with all neccessary functionalities like **validation**, **internationalization**, static resource serving, caching
 
