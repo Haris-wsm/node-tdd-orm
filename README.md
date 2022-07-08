@@ -51,4 +51,11 @@
 ### About Project
 
 - A resful webservice with express js, with all neccessary functionalities like **validation**, **internationalization**, static resource serving, caching
+- handle database operations with orm package,  **sequelize**
+- **database version** history and **migrations**
+- how to **test driven development** works
+- how it's affecting our code quality, reusability
+- how it's giving the confidence about **refactoring**
+- deploy the application to heroku
+- how to create instance in google cloud and deploy to it
 
